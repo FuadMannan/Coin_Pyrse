@@ -27,18 +27,19 @@ class PortfolioManager(Manager):
         print('Create Portfolio selected.\n')
         portfolio_name = input('Enter Portfolio name: ')
         add = input('\nAdd cryptocurrencies to portfolio? Y/N: ')
+        coins = ''
         if add == 'Y':
             print('Example Coin IDs: bitcoin, ethereum, dogecoin')
             coins = input('Enter comma separated list of Coin IDs: ')
-            count = self.db_conn.get('portfolio:count')
-            if count is None:
-                count = 1
-            else:
-                count = int(count) + 1
-            self.db_conn.set('portfolio:count', count)
-            portfolio_id = 'portfolio:' + str(count)
-            self.db_conn.hset(portfolio_id, 'portfolio_name', portfolio_name)
-            self.db_conn.hset(portfolio_id, 'coin_list', coins)
+        count = self.db_conn.get('portfolio:count')
+        if count is None:
+            count = 1
+        else:
+            count = int(count) + 1
+        self.db_conn.set('portfolio:count', count)
+        portfolio_id = 'portfolio:' + str(count)
+        self.db_conn.hset(portfolio_id, 'portfolio_name', portfolio_name)
+        self.db_conn.hset(portfolio_id, 'coin_list', coins)
 
     def list(self):
         print('List Portfolios selected.\n')
