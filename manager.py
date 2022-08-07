@@ -159,7 +159,7 @@ class QueryManager(Manager):
                 search_filter = HistoricalFilter(self, options)
             elif choice == 5 and len(filter_list) == 0:
                 print('Add at least one filter.')
-            if len(search_filter) > 0:
+            if search_filter is SearchCommand:
                 filter_list.append(search_filter)
         return filter_list
 
