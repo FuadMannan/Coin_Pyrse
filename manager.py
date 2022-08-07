@@ -106,7 +106,7 @@ class QueryManager(Manager):
         unix = time.mktime(date.timetuple())
         return unix
 
-    def select_filter(self, filter_list=[]):
+    def __select_filter(self, filter_list=[]):
         choice = None
         while choice != '5':
             print('\nAdd a filter:')
@@ -160,7 +160,7 @@ class QueryManager(Manager):
     def create(self):
         print('Create Search Query selected.\n')
         query_name = input('Enter Search Query name: ')
-        filter_list = self.select_filter()
+        filter_list = self.__select_filter()
         filter_list_string = ", ".join(filter_list)
         count = self.db_conn.get('query:count')
         if count is None:
@@ -201,7 +201,7 @@ class QueryManager(Manager):
                     print('3) Exit\n')
                     choice = input('Selection: ')
                     if choice == '1':
-                        filter_list_split = self.select_filter(filter_list_split)
+                        filter_list_split = self.__select_filter(filter_list_split)
                         filter_list = ", ".join(filter_list_split)
                         self.db_conn.hset(f'query:{i}', 'filter_list', filter_list)
                     elif choice == '2':
