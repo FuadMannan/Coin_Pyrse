@@ -49,10 +49,10 @@ class PortfolioManager(Manager):
             print('Example Coin IDs: bitcoin, ethereum, dogecoin')
             coins = input('Enter comma separated list of Coin IDs: ')
             coins = [x.strip() for x in coins.split(',')]
-        portfolio = Portfolio(portfolio_name, coins)
-        result = self.db_conn.json().arrappend('portfolios', '.portfolio_list', vars(portfolio))
+        new_portfolio = Portfolio(portfolio_name, coins)
+        result = self.db_conn.json().arrappend('portfolios', '.portfolio_list', vars(new_portfolio))
         if result is True:
-            self.__portfolio_list.append(portfolio)
+            self.__portfolio_list.append(new_portfolio)
             self.db_conn.incr('portfolio:count')
 
     def list(self):
