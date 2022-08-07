@@ -53,7 +53,9 @@ class PortfolioManager(Manager):
         result = self.db_conn.json().arrappend('portfolios', '.portfolio_list', vars(new_portfolio))
         if result is True:
             self.__portfolio_list.append(new_portfolio)
+            index = self.__portfolio_list.index(new_portfolio)
             self.db_conn.incr('portfolio:count')
+            self.db_conn.hset('portfolio-index', f'name:{new_portfolio.name}', index)
 
     def list(self):
         print('List Portfolios selected.\n')
