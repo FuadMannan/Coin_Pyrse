@@ -22,6 +22,12 @@ class Manager(ABC):
 class PortfolioManager(Manager):
     def __init__(self, db_conn):
         super().__init__(db_conn)
+        portfolios = self.db_conn.json().get('portfolios', '.portfolio_list')
+        if portfolios is None:
+            self.__portfolio_list = []
+            self.db_conn.json.set('portfolios', {'portfolio_list': []})
+        else:
+            self.__portfolio_list = portfolios
 
     def create(self):
         print('Create Portfolio selected.\n')
