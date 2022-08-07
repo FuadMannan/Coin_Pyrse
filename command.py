@@ -44,6 +44,10 @@ class SearchCommand(MenuCommand):
     def execute(self):
         pass
 
+    def __repr__(self):
+        name = self.__class__.__name__
+        return f'{name}({vars(self.options)})'
+
 
 class CoinFilter(SearchCommand):
     def __init__(self, manager, options):
