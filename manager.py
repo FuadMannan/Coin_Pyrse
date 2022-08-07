@@ -57,31 +57,26 @@ class PortfolioManager(Manager):
 
     def update(self):
         print('Update Portfolio selected.\n')
-        name = input('Enter Portfolio name: ')
-        count = int(self.db_conn.get('portfolio:count'))
-        for i in range(1, (count + 1)):
-            portfolio_name = self.db_conn.hget(f'portfolio:{i}', 'portfolio_name')
-            if portfolio_name == name:
-                asset_list = self.db_conn.hget(f'portfolio:{i}', 'coin_list')
-                print(f'\nName: {portfolio_name}')
-                print(f'Assets: {asset_list}\n')
-                print('What would you like to do?')
-                choice = None
-                while choice != '3':
-                    print('\n1) Add coin')
-                    print('2) Remove coin')
-                    print('3) Exit\n')
-                    choice = input('Selection: ')
-                    if choice == '1':
-                        coin_id = input('Enter Coin ID: ')
-                        asset_list += f', {coin_id}'
-                        self.db_conn.hset(f'portfolio:{i}', 'coin_list', asset_list)
-                    elif choice == '2':
-                        coin_id = input('Enter Coin ID: ')
-                        asset_list_split = asset_list.split(', ')
-                        asset_list_split.remove(coin_id)
-                        asset_list = ", ".join(asset_list_split)
-                        self.db_conn.hset(f'portfolio:{i}', 'coin_list', asset_list)
+        self.__list()
+        choice = input('Enter Selection: ')
+        portfolio = self.__portfolio_list[int(choice)]
+        print(f'\n  Name: {portfolio.name}')
+        print(f'Assets: {portfolio.coin_list}\n')
+        print('What would you like to do?')
+        choice = None
+        while choice != '3':
+            print('\n1) Add coin')
+            print('2) Remove coin')
+            print('3) Exit\n')
+            choice = input('Selection: ')
+            if choice == '3':
+                break
+            coin_id = input('Enter Coin ID: ')
+            if choice == '1':
+                portfolio.coin_list.append(coin_id)
+            elif choice == '2':
+                portfolio.coin_list.remove(coin_id)
+            self.db_conn.json.set('portfolios', f'$.portfolio_list[{int(choice) - 1}]', coin_id)
 
 
 class QueryManager(Manager):
