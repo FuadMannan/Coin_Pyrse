@@ -3,6 +3,7 @@ from portfolio import *
 import time
 import datetime
 from command import *
+from query import *
 from app import *
 
 
