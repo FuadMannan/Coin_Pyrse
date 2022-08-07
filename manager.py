@@ -99,6 +99,13 @@ class QueryManager(Manager):
         currencies = currencies.replace(' ', '')
         options['vs_currency'] = currencies
 
+    def __get_unix_time(self, key):
+        timestamp = input(f'Enter {key} Date (YYYY-MM-DD): ')
+        time_values = [int(x) for x in timestamp.split('-')]
+        date = datetime.datetime(time_values[0], time_values[1], time_values[2])
+        unix = time.mktime(date.timetuple())
+        return unix
+
     def select_filter(self, filter_list=[]):
         choice = None
         while choice != '5':
