@@ -168,16 +168,14 @@ class QueryManager(Manager):
         print('Create Search Query selected.\n')
         query_name = input('Enter Search Query name: ')
         filter_list = self.__select_filter()
-        filter_list_string = ", ".join(filter_list)
-        count = self.db_conn.get('query:count')
-        if count is None:
-            count = 1
-        else:
-            count = int(count) + 1
-        self.db_conn.set('query:count', count)
-        query_id = 'query:' + str(count)
-        self.db_conn.hset(query_id, 'quuery_name', query_name)
-        self.db_conn.hset(query_id, 'filter_list', filter_list_string)
+        new_query = Query(query_name, filter_list)
+        query_dict = vars(new_query).copy()
+        query_dict.pop('reporter')
+        result = \
+            self.db_conn.json().arrappend('search-queries', '.query_list', query_dict)
+        if result is True:
+            self.__query_list.append(new_query)
+            self.db_conn.incr('query:count')
 
     def list(self):
         print('List Search Queries selected.\n')
