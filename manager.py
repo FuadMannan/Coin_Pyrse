@@ -180,13 +180,7 @@ class QueryManager(Manager):
 
     def list(self):
         print('List Search Queries selected.\n')
-        print('Search Queries:')
-        count = int(self.db_conn.get('query:count'))
-        for i in range(1, (count+1)):
-            query_name = self.db_conn.hget(f'query:{i}', 'query_name')
-            filter_list = self.db_conn.hget(f'query:{i}', 'filter_list')
-            print(f'Name: {query_name}')
-            print(f'Filters: {filter_list}\n')
+        self.__list()
 
     def update(self):
         print('Update Search Query selected.\n')
