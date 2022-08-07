@@ -94,6 +94,12 @@ class QueryManager(Manager):
         else:
             self.__query_list = query_list
 
+    def __list(self):
+        print('Defined Search Queries:')
+        for i, x in enumerate(self.__query_list):
+            print(f'{i+1}) Name: {x.name}')
+            print(f'{" " * len(str(i+1))}  Filters: {x.filter_list}\n')
+
     def __get_vs_currency(self, options):
         currencies = input('Enter comma separated list of currencies: ')
         currencies = currencies.replace(' ', '')
