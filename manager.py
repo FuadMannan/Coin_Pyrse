@@ -117,21 +117,40 @@ class QueryManager(Manager):
             print('5) Exit\n')
             choice = input('Selection: ')
             search_filter = ''
+            options = {}
             if choice == '1':
-                search_filter = 'coin'
+                community_flag = input('Do you want community data? y/n: ')
+                community_data = True if community_flag == 'y' else False
+                developer_flag = input('Do you want developer data? y/n: ')
+                developer_data = True if developer_flag == 'y' else False
+                localization_flag = input('Do you want community data? y/n: ')
+                localization_data = True if localization_flag == 'y' else False
+                options['community_data'] = community_data
+                options['developer_data'] = developer_data
+                options['localization_data'] = localization_data
+                search_filter = CoinFilter(self, options)
             elif choice == '2':
-                search_filter = 'exchange'
-                currencies = input('Enter comma separated list of currencies: ')
-                search_filter += f'[{currencies}]'
+                self.__get_vs_currency(options)
+                market_cap = input('Do you want market cap? y/n: ')
+                include_market_cap = True if market_cap == 'y' else False
+                daily_vol = input('Do you want 24-hour volume? y/n: ')
+                include_24hr_vol = True if daily_vol == 'y' else False
+                daily_change = input('Do you want community data? y/n: ')
+                include_24hr_change = True if daily_change == 'y' else False
+                options['include_market_cap'] = include_market_cap
+                options['include_24hr_vol'] = include_24hr_vol
+                options['include_24hr_change'] = include_24hr_change
+                search_filter = ExchangeRateFilter(self, options)
             elif choice == '3':
-                search_filter = 'market'
-                currencies = input('Enter comma separated list of currencies: ')
-                search_filter += f'[{currencies}]'
+                self.__get_vs_currency(options)
+                search_filter = MarketFilter(self, options)
             elif choice == '4':
-                search_filter = 'historical'
-                start = input('Enter Start Date (YYYY-MM-DD): ')
-                end = input('Enter End Date (YYYY-MM-DD): ')
-                search_filter += f'[{start}, {end}]'
+                self.__get_vs_currency(options)
+                start = self.__get_unix_time('Start')
+                end = self.__get_unix_time('End')
+                options['from'] = start
+                options['to'] = end
+                search_filter = HistoricalFilter(self, options)
             elif choice == 5 and len(filter_list) == 0:
                 print('Add at least one filter.')
             if len(search_filter) > 0:
