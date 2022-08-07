@@ -94,6 +94,11 @@ class QueryManager(Manager):
         else:
             self.__query_list = query_list
 
+    def __get_vs_currency(self, options):
+        currencies = input('Enter comma separated list of currencies: ')
+        currencies = currencies.replace(' ', '')
+        options['vs_currency'] = currencies
+
     def select_filter(self, filter_list=[]):
         choice = None
         while choice != '5':
