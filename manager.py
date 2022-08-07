@@ -30,6 +30,12 @@ class PortfolioManager(Manager):
         else:
             self.__portfolio_list = portfolios
 
+    def __list(self):
+        print('Portfolios:')
+        for i, x in enumerate(self.__portfolio_list):
+            print(f'{i+1}) Name: {x.name}')
+            print(f'{" " * len(str(i))}  Assets: {x.coin_list}\n')
+
     def create(self):
         print('Create Portfolio selected.\n')
         portfolio_name = input('Enter Portfolio name: ')
@@ -47,13 +53,7 @@ class PortfolioManager(Manager):
 
     def list(self):
         print('List Portfolios selected.\n')
-        print('Portfolios:')
-        count = int(self.db_conn.get('portfolio:count'))
-        for i in range(1, (count+1)):
-            portfolio_name = self.db_conn.hget(f'portfolio:{i}', 'portfolio_name')
-            asset_list = self.db_conn.hget(f'portfolio:{i}', 'coin_list')
-            print(f'Name: {portfolio_name}')
-            print(f'Assets: {asset_list}\n')
+        self.__list()
 
     def update(self):
         print('Update Portfolio selected.\n')
