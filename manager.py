@@ -84,6 +84,12 @@ class QueryManager(Manager):
     def __init__(self, db_conn, coin_gecko):
         super().__init__(db_conn)
         self.coin_gecko = coin_gecko
+        query_list = self.db_conn.json().get('search-queries', '.query_list')
+        if query_list is None:
+            self.__query_list = []
+            self.db_conn.json.set('search-queries', {'query_list': []})
+        else:
+            self.__query_list = query_list
 
     def select_filter(self, filter_list=[]):
         choice = None
