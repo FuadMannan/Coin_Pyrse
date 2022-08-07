@@ -37,7 +37,7 @@ class PortfolioManager(Manager):
         print('Portfolios:')
         for i, x in enumerate(self.__portfolio_list):
             print(f'{i+1}) Name: {x.name}')
-            print(f'{" " * len(str(i))}  Assets: {x.coin_list}\n')
+            print(f'{" " * len(str(i+1))}  Assets: {x.coin_list}\n')
 
     def create(self):
         print('Create Portfolio selected.\n')
