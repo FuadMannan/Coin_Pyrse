@@ -183,32 +183,26 @@ class QueryManager(Manager):
 
     def update(self):
         print('Update Search Query selected.\n')
-        name = input('Enter Search Query name: ')
-        count = int(self.db_conn.get('query:count'))
-        for i in range(1, (count + 1)):
-            query_name = self.db_conn.hget(f'query:{i}', 'query_name')
-            if query_name == name:
-                filter_list = self.db_conn.hget(f'query:{i}', 'filter_list')
-                filter_list_split = filter_list.split(', ')
-                print(f'\nName: {query_name}')
-                print(f'Filters: {filter_list}\n')
-                print('What would you like to do?')
-                choice = None
-                while choice != '3':
-                    print('\n1) Add filter')
-                    print('2) Remove filter')
-                    print('3) Exit\n')
-                    choice = input('Selection: ')
-                    if choice == '1':
-                        filter_list_split = self.__select_filter(filter_list_split)
-                        filter_list = ", ".join(filter_list_split)
-                        self.db_conn.hset(f'query:{i}', 'filter_list', filter_list)
-                    elif choice == '2':
-                        index = input('Enter Index of command to remove: ')
-                        del filter_list_split[index]
-                        filter_list = ", ".join(filter_list_split)
-                        self.db_conn.hset(f'query:{i}', 'filter_list', filter_list)
+        self.__list()
+        query_choice = input('Enter Selection: ')
+        selected_query = self.__query_list[int(query_choice)]
+        print(f'\n   Name: {selected_query.name}')
+        print(f'Filters: {selected_query.filter_list}\n')
+        print('What would you like to do?')
+        update_choice = None
+        while update_choice != '3':
+            print('\n1) Add filter')
+            print('2) Remove filter')
+            print('3) Exit\n')
+            update_choice = input('Selection: ')
+            if update_choice == '3':
                 break
+            if update_choice == '1':
+                selected_query.filter_list = self.__select_filter(selected_query.filter_list)
+            elif update_choice == '2':
+                index = input('Enter Index of command to remove: ')
+                del selected_query.filter_list[int(index)]
+            self.db_conn.json.set('search-queries', f'$.query_list[{int(query_choice)-1}]', selected_query)
 
     def run(self):
         print('Run Search Query Selected.\n')
