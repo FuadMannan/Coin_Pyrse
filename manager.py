@@ -61,25 +61,25 @@ class PortfolioManager(Manager):
     def update(self):
         print('Update Portfolio selected.\n')
         self.__list()
-        choice = input('Enter Selection: ')
-        portfolio = self.__portfolio_list[int(choice)]
-        print(f'\n  Name: {portfolio.name}')
-        print(f'Assets: {portfolio.coin_list}\n')
+        portfolio_choice = input('Enter Selection: ')
+        selected_portfolio = self.__portfolio_list[int(portfolio_choice)]
+        print(f'\n  Name: {selected_portfolio.name}')
+        print(f'Assets: {selected_portfolio.coin_list}\n')
         print('What would you like to do?')
-        choice = None
-        while choice != '3':
+        update_choice = None
+        while update_choice != '3':
             print('\n1) Add coin')
             print('2) Remove coin')
             print('3) Exit\n')
-            choice = input('Selection: ')
-            if choice == '3':
+            update_choice = input('Selection: ')
+            if update_choice == '3':
                 break
             coin_id = input('Enter Coin ID: ')
-            if choice == '1':
-                portfolio.coin_list.append(coin_id)
-            elif choice == '2':
-                portfolio.coin_list.remove(coin_id)
-            self.db_conn.json.set('portfolios', f'$.portfolio_list[{int(choice) - 1}]', coin_id)
+            if update_choice == '1':
+                selected_portfolio.coin_list.append(coin_id)
+            elif update_choice == '2':
+                selected_portfolio.coin_list.remove(coin_id)
+            self.db_conn.json.set('portfolios', f'$.portfolio_list[{int(portfolio_choice) - 1}]', selected_portfolio)
 
 
 class QueryManager(Manager):
