@@ -83,7 +83,9 @@ class MarketFilter(SearchCommand):
         super().__init__(manager, options)
 
     def execute(self):
-        self.manager.market()
+        ids_string = ','.join(self.options['ids'])
+        result = self.manager.get_coins_markets(ids=ids_string, vs_currency=self.options['vs_currency'])
+        return result
 
 
 class HistoricalFilter(SearchCommand):
