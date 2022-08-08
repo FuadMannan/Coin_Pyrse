@@ -29,15 +29,16 @@ class PortfolioManager(Manager):
         portfolios = self.db_conn.json().get('portfolios', '.portfolio_list')
         if portfolios is None:
             self.__portfolio_list = []
-            self.db_conn.json.set('portfolios', {'portfolio_list': []})
+            self.db_conn.json().set('portfolios', '.', {'portfolio_list': []})
         else:
             self.__portfolio_list = portfolios
 
     def __list(self):
         print('Portfolios:')
-        for i, x in enumerate(self.__portfolio_list):
-            print(f'{i+1}) Name: {x.name}')
-            print(f'{" " * len(str(i+1))}  Assets: {x.coin_list}\n')
+        if len(self.__portfolio_list) > 0:
+            for i, x in enumerate(self.__portfolio_list):
+                print(f'{i+1}) Name: {x["name"]}')
+                print(f'{" " * len(str(i+1))}  Assets: {x["coin_list"]}\n')
 
     def create(self):
         print('Create Portfolio selected.\n')
@@ -81,7 +82,7 @@ class PortfolioManager(Manager):
                 selected_portfolio.coin_list.append(coin_id)
             elif update_choice == '2':
                 selected_portfolio.coin_list.remove(coin_id)
-            self.db_conn.json.set('portfolios', f'$.portfolio_list[{int(portfolio_choice) - 1}]', selected_portfolio)
+            self.db_conn.json().set('portfolios', f'$.portfolio_list[{int(portfolio_choice) - 1}]', selected_portfolio)
 
 
 class QueryManager(Manager):
@@ -89,18 +90,20 @@ class QueryManager(Manager):
     def __init__(self, db_conn, coin_gecko):
         super().__init__(db_conn)
         self.coin_gecko = coin_gecko
+        self.reporter = Reporter()
         query_list = self.db_conn.json().get('search-queries', '.query_list')
         if query_list is None:
             self.__query_list = []
-            self.db_conn.json.set('search-queries', {'query_list': []})
+            self.db_conn.json().set('search-queries', '.', {'query_list': []})
         else:
             self.__query_list = query_list
 
     def __list(self):
         print('Defined Search Queries:')
-        for i, x in enumerate(self.__query_list):
-            print(f'{i+1}) Name: {x.name}')
-            print(f'{" " * len(str(i+1))}  Filters: {x.filter_list}\n')
+        if len(self.__query_list) > 0:
+            for i, x in enumerate(self.__query_list):
+                print(f'{i+1}) Name: {x["name"]}')
+                print(f'{" " * len(str(i+1))}  Filters: {x.filter_list}\n')
 
     def __get_vs_currency(self, options):
         currencies = input('Enter comma separated list of currencies: ')
@@ -203,7 +206,7 @@ class QueryManager(Manager):
             elif update_choice == '2':
                 index = input('Enter Index of command to remove: ')
                 del selected_query.filter_list[int(index)]
-            self.db_conn.json.set('search-queries', f'$.query_list[{int(query_choice)-1}]', selected_query)
+            self.db_conn.json().set('search-queries', f'$.query_list[{int(query_choice)-1}]', selected_query)
 
     def run(self):
         print('Run Search Query Selected.\n')
