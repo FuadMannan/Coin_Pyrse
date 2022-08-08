@@ -93,7 +93,14 @@ class HistoricalFilter(SearchCommand):
         super().__init__(manager, options)
 
     def execute(self):
-        self.manager.range()
+        results = []
+        for x in self.options['ids']:
+            result = self.manager.get_coin_market_chart_range_by_id(id=x,
+                                                                    vs_currency=self.options['vs_currency'],
+                                                                    from_timestamp=self.options['from'],
+                                                                    to_timestamp=self.options['to'])
+            results.append(result)
+        return results
 
 
 class RunQuery(SearchCommand):
