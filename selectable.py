@@ -1,4 +1,3 @@
-from abc import ABC, abstractmethod
 from command import *
 
 
@@ -20,13 +19,18 @@ class Menu(Selectable):
         self.items = selectable_list
 
     def select(self):
-        print(f'{self.display()} Menu\n')
-        i = 1
-        for x in self.items:
-            print(f'{i}) {x.display()}')
-        print()
-        choice = int(input('Selection: '))
-        self.items[choice].select()
+        while True:
+            print(f'{self.display()}\n')
+            i = 1
+            for x in self.items:
+                print(f'{i}) {x.display()}')
+                i += 1
+            print(f'{i}) Exit')
+            choice = int(input('Selection: ')) - 1
+            if choice == i-1:
+                return
+            else:
+                self.items[choice].select()
 
 
 class MenuItem(Selectable):
