@@ -69,7 +69,13 @@ class ExchangeRateFilter(SearchCommand):
         super().__init__(manager, options)
 
     def execute(self):
-        self.manager.exchange()
+        ids_string = ','.join(self.options['ids'])
+        result = self.manager.get_price(ids=ids_string,
+                                        vs_currencies=self.options['vs_currency'],
+                                        include_market_cap=self.options['include_market_cap'],
+                                        include_24hr_vol=self.options['include_24hr_vol'],
+                                        include_24hr_change=self.options['include_24hr_change'])
+        return result
 
 
 class MarketFilter(SearchCommand):
