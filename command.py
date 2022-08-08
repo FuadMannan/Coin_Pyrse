@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from app import *
 
 
 class MenuCommand(ABC):
@@ -54,6 +53,7 @@ class CoinFilter(SearchCommand):
         super().__init__(manager, options)
 
     def execute(self):
+        response = {'section': 'CoinFilter'}
         results = []
         for x in self.options['ids']:
             result = self.manager.get_coin_by_id(id=x,
@@ -61,7 +61,8 @@ class CoinFilter(SearchCommand):
                                                  developer_data=self.options['developer_data'],
                                                  localization_data=self.options['localization_data'])
             results.append(result)
-        return results
+        response['results'] = results
+        return response
 
 
 class ExchangeRateFilter(SearchCommand):
@@ -69,13 +70,15 @@ class ExchangeRateFilter(SearchCommand):
         super().__init__(manager, options)
 
     def execute(self):
+        response = {'section': 'ExchangeRateFilter'}
         ids_string = ','.join(self.options['ids'])
         result = self.manager.get_price(ids=ids_string,
                                         vs_currencies=self.options['vs_currency'],
                                         include_market_cap=self.options['include_market_cap'],
                                         include_24hr_vol=self.options['include_24hr_vol'],
                                         include_24hr_change=self.options['include_24hr_change'])
-        return result
+        response['results'] = result
+        return response
 
 
 class MarketFilter(SearchCommand):
@@ -83,9 +86,11 @@ class MarketFilter(SearchCommand):
         super().__init__(manager, options)
 
     def execute(self):
+        response = {'section': 'MarketFilter'}
         ids_string = ','.join(self.options['ids'])
         result = self.manager.get_coins_markets(ids=ids_string, vs_currency=self.options['vs_currency'])
-        return result
+        response['results'] = result
+        return response
 
 
 class HistoricalFilter(SearchCommand):
@@ -93,6 +98,7 @@ class HistoricalFilter(SearchCommand):
         super().__init__(manager, options)
 
     def execute(self):
+        response = {'section': 'HistoricalFilter'}
         results = []
         for x in self.options['ids']:
             result = self.manager.get_coin_market_chart_range_by_id(id=x,
@@ -100,7 +106,8 @@ class HistoricalFilter(SearchCommand):
                                                                     from_timestamp=self.options['from'],
                                                                     to_timestamp=self.options['to'])
             results.append(result)
-        return results
+        response['results'] = results
+        return response
 
 
 class RunQuery(SearchCommand):
