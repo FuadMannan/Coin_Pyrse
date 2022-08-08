@@ -207,16 +207,31 @@ class QueryManager(Manager):
 
     def run(self):
         print('Run Search Query Selected.\n')
-        query_name = input('Enter Search Query Name: ')
+        self.__list()
+        query_idx = int(input('Enter Selection: '))
+        selected_query = self.__query_list[query_idx]
         print()
         portfolio_name = input('Enter Portfolio Name: ')
-        print(f'\nExecuting {query_name} on {portfolio_name}...\n')
-        count = int(self.db_conn.get('query:count'))
-        for i in range(1, (count + 1)):
-            name = self.db_conn.hget(f'query:{i}', 'query_name')
-            if name == query_name:
-                filter_list = self.db_conn.hget(f'query:{i}', 'filter_list')
-                print(f'\nName: {query_name}')
-                print(f'\nFilter List: {filter_list}\n')
-
+        portfolio_index = int(self.db_conn.hget('portfolio-index', f'name:{portfolio_name}'))
+        selected_portfolio = self.db_conn.json().get('portfolios', f'$.portfolio_list[{portfolio_index}]')
+        print(f'\nExecuting {selected_query.name} on {selected_portfolio.name}...\n')
+        query_info = selected_query.copy()
+        query_info.pop('reporter')
+        response = {'query': vars(query_info)}
+        results = []
+        for x in selected_query.filter_list:
+            x.options['ids'] = selected_portfolio.coin_list
+            result = x.execute()
+            results.append(result)
+            x.options['ids'].pop()
+        response['results'] = results
+        print('Finished executing query.\nBuilding report..')
+        report = self.reporter.construct(response)
+        print(report)
+        save_file = input('Save Report? y/n: ')
+        if save_file == 'y':
+            file_name = input('Enter filename: ')
+            report_file = open(file_name, 'w')
+            report_file.write(report)
+            report_file.close()
 
