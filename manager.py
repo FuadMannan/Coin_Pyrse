@@ -137,7 +137,7 @@ class QueryManager(Manager):
                 options['community_data'] = community_data
                 options['developer_data'] = developer_data
                 options['localization_data'] = localization_data
-                search_filter = CoinFilter(self, options)
+                search_filter = CoinFilter(self.coin_gecko, options)
             elif choice == '2':
                 self.__get_vs_currency(options)
                 market_cap = input('Do you want market cap? y/n: ')
@@ -149,17 +149,17 @@ class QueryManager(Manager):
                 options['include_market_cap'] = include_market_cap
                 options['include_24hr_vol'] = include_24hr_vol
                 options['include_24hr_change'] = include_24hr_change
-                search_filter = ExchangeRateFilter(self, options)
+                search_filter = ExchangeRateFilter(self.coin_gecko, options)
             elif choice == '3':
                 self.__get_vs_currency(options)
-                search_filter = MarketFilter(self, options)
+                search_filter = MarketFilter(self.coin_gecko, options)
             elif choice == '4':
                 self.__get_vs_currency(options)
                 start = self.__get_unix_time('Start')
                 end = self.__get_unix_time('End')
                 options['from'] = start
                 options['to'] = end
-                search_filter = HistoricalFilter(self, options)
+                search_filter = HistoricalFilter(self.coin_gecko, options)
             elif choice == 5 and len(filter_list) == 0:
                 print('Add at least one filter.')
             if search_filter is SearchCommand:
