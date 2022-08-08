@@ -54,7 +54,14 @@ class CoinFilter(SearchCommand):
         super().__init__(manager, options)
 
     def execute(self):
-        self.manager.coin_info()
+        results = []
+        for x in self.options['ids']:
+            result = self.manager.get_coin_by_id(id=x,
+                                                 community_data=self.options['community_data'],
+                                                 developer_data=self.options['developer_data'],
+                                                 localization_data=self.options['localization_data'])
+            results.append(result)
+        return results
 
 
 class ExchangeRateFilter(SearchCommand):
