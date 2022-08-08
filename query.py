@@ -1,11 +1,7 @@
-from reporter import *
-
-
 class Query:
     
     def __init__(self, name, filter_list):
         self.name = name
-        self.reporter = Reporter()
         self.filter_list = filter_list
         
     def add_filter(self, search_filter):

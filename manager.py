@@ -1,10 +1,9 @@
-from abc import ABC, abstractmethod
+from reporter import *
+from query import *
 from portfolio import *
 import time
 import datetime
 from command import *
-from query import *
-from app import *
 
 
 class Manager(ABC):
